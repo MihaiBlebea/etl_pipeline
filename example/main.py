@@ -19,6 +19,7 @@ class AuthorExtractor(Extractor):
 		
 		self.base_url = base_url
 
+	@cache_factory("./cache", "authors", 10)
 	def extract(self, author_id: int)-> dict:
 		return self._get_from_url(self.base_url + "/authors/" + str(author_id))
 
@@ -34,7 +35,7 @@ class PostExtractor(Extractor):
 		self.author_extractor = author_extractor
 		self.base_url = base_url
 
-	@cache_factory("./cache", "posts", 10)
+	# @cache_factory("./cache", "posts", 10)
 	def extract(self)-> dict:
 		body = self._get_from_url(self.base_url + "/posts")
 
@@ -86,5 +87,5 @@ if __name__ == "__main__":
 		PrintLoader()
 	)
 
-	# pipe.run_once()
-	pipe.run_schedule("* * * * *")
+	pipe.run_once()
+	# pipe.run_schedule("* * * * *")

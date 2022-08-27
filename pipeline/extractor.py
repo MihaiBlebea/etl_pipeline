@@ -8,7 +8,10 @@ def cache_factory(cache_dir: str, file_prefix: str, ttl_sec: int):
 	def cache(func):
 		def wrapper(*args, **kwargs):
 
-			file_sufix = "_".join([str(argv) for argv in list(kwargs.values())])
+			args_params = [str(argv) for argv in args[1:]]
+			kwargs_params = [str(argv) for argv in list(kwargs.values())]
+
+			file_sufix = "_".join(args_params + kwargs_params)
 
 			Path(cache_dir).mkdir(parents=True, exist_ok=True)
 

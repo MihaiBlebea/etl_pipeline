@@ -21,15 +21,13 @@ init:
 	./env/bin/pip3 install -r requirements.txt
 
 test:
-	./execute_test.sh 
+	./execute_tests.sh 
 
-docker-build:
-	docker build -t personal-ledger:v1.0 --no-cache .
+build:
+	python3 setup.py bdist_wheel
 
-docker-run:
-	docker run -v ${PWD}/volume:/app/volume --rm -d --name personal-ledger personal-ledger:v1.0
+publish:
+	twine upload dist/* --verbose
 
-docker: docker-build docker-run
-
-docker-stop:
-	docker stop personal-ledger && docker rm personal-ledger
+remove-old-builds:
+	rm -rf ./.eggs ./build ./dist ./python_etl_pipeline.egg-info

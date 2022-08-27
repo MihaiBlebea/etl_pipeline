@@ -2,3 +2,8 @@ cache
 artefacts
 env
 example/node_modules
+
+.eggs
+build
+dist
+python_etl_pipeline.egg-info
