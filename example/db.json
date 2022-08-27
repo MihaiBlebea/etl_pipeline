@@ -1,0 +1,36 @@
+{
+	"posts": [
+		{
+			"id": 1,
+			"author_id": 1,
+			"title": "Post 1"
+		},
+		{
+			"id": 2,
+			"author_id": 1,
+			"title": "Post 2"
+		},
+		{
+			"id": 3,
+			"author_id": 2,
+			"title": "Post 3"
+		}
+	],
+	"authors": [
+		{
+			"id": 1,
+			"first_name": "Mihai",
+			"last_name": "Blebea"
+		},
+		{
+			"id": 2,
+			"first_name": "John",
+			"last_name": "Doe"
+		},
+		{
+			"id": 3,
+			"first_name": "Jane",
+			"last_name": "Smith"
+		}
+	]
+}
