@@ -9,21 +9,30 @@ from pipeline import (
 import pandas as pd
 
 
+class AuthorExtractor(Extractor):
+	"""
+	AuthorExtractor retries author first name and last name, based on the post author id field
+	"""
+
+	def __init__(self, base_url: str, **params)-> None:
+		super().__init__(**params)
+		
+		self.base_url = base_url
+
+	def extract(self, author_id: int)-> dict:
+		return self._get_from_url(self.base_url + "/authors/" + str(author_id))
+
+
 class PostExtractor(Extractor):
 	"""
 	PostExtractor retries posts from the demo API
 	"""
 
-	def __init__(self, **params)-> None:
+	def __init__(self, author_extractor: AuthorExtractor, base_url: str, **params)-> None:
 		super().__init__(**params)
-		if "author_extractor" not in params:
-			raise Exception("author_extractor not supplied")
 
-		if "base_url" not in params:
-			raise Exception("base_url not supplied")
-
-		self.author_extractor : AuthorExtractor = params["author_extractor"]
-		self.base_url = params["base_url"]
+		self.author_extractor = author_extractor
+		self.base_url = base_url
 
 	@cache_factory("./cache", "posts", 10)
 	def extract(self)-> dict:
@@ -36,26 +45,6 @@ class PostExtractor(Extractor):
 				"author": self.author_extractor.extract(author_id = post["author_id"])
 			} for post in body
 		]
-
-
-class AuthorExtractor(Extractor):
-	"""
-	AuthorExtractor retries author first name and last name, based on the post author id field
-	"""
-
-	def __init__(self, **params)-> None:
-		super().__init__(**params)
-
-		if "base_url" not in params:
-			raise Exception("base_url not supplied")
-		
-		self.base_url = params["base_url"]
-
-	def extract(self, **params)-> dict:
-		if "author_id" not in params:
-			raise Exception("author_id not supplied")
-
-		return self._get_from_url(self.base_url + "/authors/" + str(params["author_id"]))
 
 
 class PostTransformer(Transformer):
@@ -97,4 +86,5 @@ if __name__ == "__main__":
 		PrintLoader()
 	)
 
-	pipe.run_once()
+	# pipe.run_once()
+	pipe.run_schedule("* * * * *")
